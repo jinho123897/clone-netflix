@@ -2,10 +2,13 @@ import React from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { IGetMoviesResult, getMovies } from "../api.ts";
-import { makeImagePath } from "../utilis.ts";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { FaPlay } from "react-icons/fa";
+import { CiCircleInfo } from "react-icons/ci";
+import { IGetMoviesResult, getPopularMovies } from "../api.ts";
+import { makeImagePath } from "../utilis.ts";
 import SliderWrap from "./Components/Slider.tsx";
+import Banner from "./Components/Banner.tsx";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -19,28 +22,6 @@ const Loader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const Banner = styled.div<{ bgphoto: string }>`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${(props) => props.bgphoto});
-  background-size: cover;
-  background-position: center center;
-`;
-
-const Title = styled.h2`
-  font-size: 68px;
-  margin-bottom: 20px;
-`;
-
-const Overview = styled.p`
-  font-size: 28px;
-  width: 50%;
 `;
 
 const Overlay = styled(motion.div)`
@@ -90,10 +71,9 @@ const BigOverview = styled.p``;
 function Home() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-  // const windowWidth = useWindowDimensions();
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
-    getMovies
+    getPopularMovies
   );
 
   const onOverlayClick = () => history.push("/");
@@ -109,10 +89,7 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
-          </Banner>
+          <Banner />
           <SliderWrap />
           <AnimatePresence>
             {bigMovieMatch ? (

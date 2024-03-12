@@ -3,12 +3,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import useWindowDimensions from "../../useWindowDimensions.tsx";
 import { useQuery } from "react-query";
-import { IGetMoviesResult, getMovies } from "../../api.ts";
+import { IGetMoviesResult, getPopularMovies } from "../../api.ts";
 import MovieBox from "./MovieBox.tsx";
 
 const Wrapper = styled.div`
   position: relative;
-  top: -100px;
+  top: -10vh;
   padding: 0 40px;
 `;
 
@@ -21,7 +21,7 @@ const Slider = styled.div`
   position: relative;
   height: 10vw;
 
-  button {
+  & > button {
     display: block;
     width: 40px;
     height: 100%;
@@ -76,7 +76,7 @@ function SliderWrap() {
   const windowWidth = useWindowDimensions();
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
-    getMovies
+    getPopularMovies
   );
   const offset = 5;
   const [sliderIdx, setSliderIdx] = useState(0);
@@ -107,7 +107,7 @@ function SliderWrap() {
 
   return (
     <Wrapper>
-      <Title>Top Rated</Title>
+      <Title>Popular movies</Title>
       <Slider>
         <AnimatePresence
           initial={false}
@@ -127,12 +127,12 @@ function SliderWrap() {
               .slice(1)
               .slice(offset * sliderIdx, offset * sliderIdx + offset)
               .map((movie) => (
-                <MovieBox movieInfo={movie} type="home" />
+                <MovieBox movieInfo={movie} type="home" key={movie.id} />
               ))}
           </Row>
-          <PrevBtn onClick={decreaseIndex}>&lt;</PrevBtn>
-          <NextBtn onClick={increaseIndex}>&gt;</NextBtn>
         </AnimatePresence>
+        <PrevBtn onClick={decreaseIndex}>&lt;</PrevBtn>
+        <NextBtn onClick={increaseIndex}>&gt;</NextBtn>
       </Slider>
     </Wrapper>
   );

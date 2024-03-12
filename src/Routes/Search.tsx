@@ -22,8 +22,8 @@ const Title = styled.h3`
 
 const MovieWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3vw;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
 `;
 
 function Search() {
@@ -46,7 +46,7 @@ function Search() {
 
       <MovieWrapper>
         {data?.results.map((content) => (
-          <MovieBox movieInfo={content} key={content.id} />
+          <MovieBox movieInfo={content} key={content.id} type="search" />
         ))}
       </MovieWrapper>
       {clickedContentsId ? <MovieInfo moviesInfo={data} /> : null}

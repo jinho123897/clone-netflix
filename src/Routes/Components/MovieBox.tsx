@@ -1,9 +1,10 @@
 import React from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import { FaPlay, FaPlus, FaRegThumbsUp } from "react-icons/fa";
 
 import { makeImagePath } from "../../utilis.ts";
-import { useHistory, useLocation } from "react-router-dom";
 
 const Box = styled(motion.div)<{ bgphoto: string }>`
   width: 100%;
@@ -21,10 +22,14 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
     border-bottom-right-radius: 0px;
   }
   &:first-child {
-    transform-origin: top left;
+    transform-origin: center left;
+    background-color: white;
   }
-  &:last-child {
-    transform-origin: bottom right;
+  &:nth-child(5n + 1) {
+    transform-origin: center left;
+  }
+  &:nth-child(5n) {
+    transform-origin: center right;
   }
 `;
 
@@ -42,6 +47,45 @@ const Info = styled(motion.div)`
   }
 `;
 
+const BtnWrap = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+
+  & > button {
+    position: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 13px;
+    margin-right: 10px;
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: 0.3s all;
+    font-size: 10px;
+    cursor: pointer;
+  }
+
+  & > button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+  }
+
+  & > button:first-child {
+    background-color: white;
+    color: #333;
+    border-color: white;
+  }
+`;
+
+const PlayBtn = styled.button``;
+const PlusBtn = styled.button``;
+const GoodBtn = styled.button``;
+
+const Title = styled.h4``;
+
 const boxVariants = {
   normal: {
     scale: 1,
@@ -50,7 +94,7 @@ const boxVariants = {
     },
   },
   hover: {
-    scale: 1.3,
+    scale: 1.2,
     y: -50,
     transition: {
       delay: 0.4,
@@ -89,7 +133,6 @@ function MovieBox({ movieInfo, type }) {
         whileHover="hover"
         initial="normal"
         bgphoto={makeImagePath(movieInfo.backdrop_path)}
-        key={movieInfo.id}
         layoutId={movieInfo.id + ""}
         onClick={() =>
           type === "home"
@@ -98,7 +141,18 @@ function MovieBox({ movieInfo, type }) {
         }
       >
         <Info variants={infoVariants}>
-          <h4>{movieInfo.name || movieInfo.title}</h4>
+          <BtnWrap>
+            <PlayBtn>
+              <FaPlay />
+            </PlayBtn>
+            <PlusBtn>
+              <FaPlus />
+            </PlusBtn>
+            <GoodBtn>
+              <FaRegThumbsUp />
+            </GoodBtn>
+          </BtnWrap>
+          <Title>{movieInfo.name || movieInfo.title}</Title>
         </Info>
       </Box>
     </>
