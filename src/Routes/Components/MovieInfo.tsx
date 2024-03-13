@@ -2,7 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
-
+import { IoClose } from "react-icons/io5";
+import { FaPlay, FaPlus, FaRegThumbsUp } from "react-icons/fa";
 import { makeImagePath } from "../../utilis.ts";
 
 const Overlay = styled(motion.div)`
@@ -18,15 +19,16 @@ const Overlay = styled(motion.div)`
   align-items: center;
 `;
 
-const BigMovie = styled(motion.div)`
+const ContentBox = styled(motion.div)`
+  position: relative;
   width: 40vw;
   height: 80vh;
   background-color: ${(props) => props.theme.black.lighter};
   border-radius: 15px;
-  overflow: hidden;
+  overflow: auto;
 `;
 
-const BigCover = styled.div<{ bgphoto: string }>`
+const Cover = styled.div<{ bgphoto: string }>`
   width: 100%;
   height: 40%;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
@@ -35,48 +37,134 @@ const BigCover = styled.div<{ bgphoto: string }>`
   background-position: center center;
 `;
 
-const BigInfo = styled.div`
+const Info = styled.div`
   position: relative;
   padding: 20px;
   color: ${(props) => props.theme.white.lighter};
 `;
 
-const BigTitle = styled.h3`
+const Title = styled.h3`
   position: absolute;
   top: -80px;
   font-size: 28px;
 `;
 
-const BigOverview = styled.p``;
+const Overview = styled.p`
+  margin-top: 20px;
+`;
 
-function MovieInfo({ moviesInfo }) {
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  border: 1px solid gray;
+  background-color: rgba(0, 0, 0, 0.3);
+  font-size: 20px;
+  color: white;
+  transition: 0.3s all;
+  &:hover {
+    transform: scale(1.05);
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+`;
+const BtnWrap = styled.div`
+  display: flex;
+  margin: 10px 0;
+
+  & > button {
+    position: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    margin-right: 10px;
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: 0.3s all;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  & > button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+  }
+
+  & > button:first-child {
+    width: 80px;
+    background-color: white;
+    color: #333;
+    border-radius: 3px;
+    border-color: white;
+  }
+`;
+
+const PlayBtn = styled.button``;
+const PlusBtn = styled.button``;
+const GoodBtn = styled.button``;
+
+function MovieInfo(props) {
   const history = useHistory();
   const { search } = useLocation();
   const clickedMovieId = search.split("&mid=")[1];
-  const clickedMovieInfo = moviesInfo?.results.find(
-    (movie) => movie.id === Number(clickedMovieId)
+  const clickedHomeContentId = useRouteMatch<{ movieId: string }>(
+    "/movies/:movieId"
   );
-  const onOverlayClick = () => history.push(search.split("&")[0]);
+
+  const clickedMovieInfo = props.moviesInfo.find((movie) =>
+    props.type === "home"
+      ? movie.id === Number(clickedHomeContentId?.params.movieId)
+      : movie.id === Number(clickedMovieId)
+  );
+  const closeOverlay = (event) => {
+    event.stopPropagation();
+    history.push(search.split("&")[0]);
+  };
 
   return (
     <Overlay
-      onClick={onOverlayClick}
+      onClick={closeOverlay}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <BigMovie layoutId={moviesInfo.movieId}>
+      <ContentBox layoutId={clickedMovieInfo?.movieId}>
         {clickedMovieInfo && (
           <>
-            <BigCover bgphoto={makeImagePath(clickedMovieInfo.backdrop_path)} />
-            <BigInfo>
-              <BigTitle>
-                {clickedMovieInfo.name || clickedMovieInfo.title}
-              </BigTitle>
-              <BigOverview>{clickedMovieInfo.overview}</BigOverview>
-            </BigInfo>
+            <Cover bgphoto={makeImagePath(clickedMovieInfo.backdrop_path)} />
+            <Info>
+              <Title>{clickedMovieInfo.name || clickedMovieInfo.title}</Title>
+              <BtnWrap>
+                <PlayBtn>
+                  <FaPlay />
+                  재생
+                </PlayBtn>
+                <PlusBtn>
+                  <FaPlus />
+                </PlusBtn>
+                <GoodBtn>
+                  <FaRegThumbsUp />
+                </GoodBtn>
+              </BtnWrap>
+              <p>Release date : {clickedMovieInfo.release_date} </p>
+              <p>Vote average : {clickedMovieInfo.vote_average}</p>
+              <p>Vote count : {clickedMovieInfo.vote_count}</p>
+              <Overview>{clickedMovieInfo.overview}</Overview>
+            </Info>
           </>
         )}
-      </BigMovie>
+        <CloseBtn onClick={closeOverlay}>
+          <IoClose />
+        </CloseBtn>
+      </ContentBox>
     </Overlay>
   );
 }

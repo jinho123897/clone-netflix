@@ -34,9 +34,6 @@ function Search() {
   );
 
   const clickedContentsId = search.split("&mid=")[1];
-  // const clickedContentsInfo = data?.results.find(
-  //   (content) => content.id === Number(clickedContentsId)
-  // );
 
   return (
     <Wrapper>
@@ -49,7 +46,7 @@ function Search() {
           <MovieBox movieInfo={content} key={content.id} type="search" />
         ))}
       </MovieWrapper>
-      {clickedContentsId ? <MovieInfo moviesInfo={data} /> : null}
+      {clickedContentsId ? <MovieInfo moviesInfo={data?.results} /> : null}
     </Wrapper>
   );
 }
