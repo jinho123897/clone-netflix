@@ -73,11 +73,11 @@ function Banner() {
       <BtnWrap>
         <PlayBtn>
           <FaPlay />
-          재생
+          Play
         </PlayBtn>
         <InfoBtn onClick={() => overlayInfo(data?.results[0].id)}>
           <CiCircleInfo />
-          상세 정보
+          Infomation
         </InfoBtn>
       </BtnWrap>
     </BannerWrap>

@@ -29,7 +29,7 @@ export function searchMovies(keyword) {
   ).then((response) => response.json());
 }
 
-export function searchAllContents(keyword?: string) {
+export function searchAllContents(keyword?: string | null) {
   return fetch(
     `${BASE_PATH}/search/multi?query=${keyword}&language=en-US&api_key=${API_KEY}`
   ).then((response) => response.json());

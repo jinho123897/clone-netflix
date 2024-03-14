@@ -21,8 +21,8 @@ const Overlay = styled(motion.div)`
 
 const ContentBox = styled(motion.div)`
   position: relative;
-  width: 40vw;
-  height: 80vh;
+  width: 50vw;
+  height: 90vh;
   background-color: ${(props) => props.theme.black.lighter};
   border-radius: 15px;
   overflow: auto;
@@ -45,7 +45,7 @@ const Info = styled.div`
 
 const Title = styled.h3`
   position: absolute;
-  top: -80px;
+  top: -100px;
   font-size: 28px;
 `;
 
@@ -74,8 +74,9 @@ const CloseBtn = styled.button`
   }
 `;
 const BtnWrap = styled.div`
+  position: absolute;
+  top: -50px;
   display: flex;
-  margin: 10px 0;
 
   & > button {
     position: unset;
@@ -145,7 +146,7 @@ function MovieInfo(props) {
               <BtnWrap>
                 <PlayBtn>
                   <FaPlay />
-                  재생
+                  Play
                 </PlayBtn>
                 <PlusBtn>
                   <FaPlus />
@@ -154,9 +155,9 @@ function MovieInfo(props) {
                   <FaRegThumbsUp />
                 </GoodBtn>
               </BtnWrap>
-              <p>Release date : {clickedMovieInfo.release_date} </p>
-              <p>Vote average : {clickedMovieInfo.vote_average}</p>
-              <p>Vote count : {clickedMovieInfo.vote_count}</p>
+              <p>Release date : {clickedMovieInfo.release_date || "None"} </p>
+              <p>Vote average : {clickedMovieInfo.vote_average || "None"}</p>
+              <p>Vote count : {clickedMovieInfo.vote_count || "None"}</p>
               <Overview>{clickedMovieInfo.overview}</Overview>
             </Info>
           </>

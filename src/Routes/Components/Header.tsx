@@ -90,24 +90,6 @@ const Input = styled(motion.input)`
   border: 1px solid ${(props) => props.theme.white.lighter};
 `;
 
-const logoVariants = {
-  normal: {
-    fillOpacity: 1,
-    scale: 1,
-  },
-  active: {
-    fillOpacity: 0,
-    scale: [1.1, 1],
-    // transition: {
-    //   duration
-    // },
-  },
-  exit: {
-    fillOpacity: 1,
-    scale: 1,
-  },
-};
-
 const navVariants = {
   top: {
     backgroundColor: "rgba(0, 0, 0, 0)",
@@ -142,7 +124,7 @@ function Header() {
   };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 80) {
+    if (latest > 40) {
       navAnimation.start("scroll");
     } else {
       navAnimation.start("top");
@@ -181,7 +163,7 @@ function Header() {
         </Items>
       </Col>
       <Col>
-        <Search onInput={handleSubmit(onValid)}>
+        <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
             onClick={toggleSearch}
             animate={{ x: searchOpen ? -175 : 0 }}
@@ -202,6 +184,7 @@ function Header() {
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
             placeholder="Search for movie or tv show."
+            // onInput={() => console.log()}
           />
         </Search>
       </Col>

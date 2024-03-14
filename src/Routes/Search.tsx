@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useLocation } from "react-router-dom";
 import { searchAllContents, searchMovies } from "../api.ts";
@@ -28,12 +28,12 @@ const MovieWrapper = styled.div`
 
 function Search() {
   const { search } = useLocation();
-  const keyword = search.split("=")[1].split("&")[0];
+  const keyword = new URLSearchParams(search).get("keyword");
+  // const keyword = search.split("=")[1].split("&")[0];
+  const clickedContentsId = search.split("&mid=")[1];
   const { data, isLoading } = useQuery(["searchAllContents", "search"], () =>
     searchAllContents(keyword)
   );
-
-  const clickedContentsId = search.split("&mid=")[1];
 
   return (
     <Wrapper>
