@@ -31,7 +31,7 @@ function Search() {
   const keyword = new URLSearchParams(search).get("keyword");
   // const keyword = search.split("=")[1].split("&")[0];
   const clickedContentsId = search.split("&mid=")[1];
-  const { data, isLoading } = useQuery(["searchAllContents", "search"], () =>
+  const { data, isLoading } = useQuery(["searchAllContents", keyword], () =>
     searchAllContents(keyword)
   );
 
