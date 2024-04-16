@@ -8,12 +8,16 @@ import { useQuery } from "react-query";
 import { useHistory } from "react-router-dom";
 
 const BannerWrap = styled.div<{ bgphoto: string }>`
-  height: 100vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 60px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 1),
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 1)
+    ),
     url(${(props) => props.bgphoto});
   background-size: cover;
   background-position: center center;
@@ -46,13 +50,20 @@ const BtnWrap = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 68px;
+  font-size: 4rem;
   margin-bottom: 20px;
 `;
 
 const Overview = styled.p`
-  font-size: 28px;
-  width: 50%;
+  font-size: 1.4rem;
+  width: 40%;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  word-break: keep-all;
 `;
 
 function Banner() {

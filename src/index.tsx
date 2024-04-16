@@ -65,7 +65,6 @@ body {
   color: ${(props) => props.theme.white.darker};
   line-height: 1.2;
   background-color: black;
-  overflow: hidden;
 }
 a {
   text-decoration:none;

@@ -14,6 +14,7 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-size: cover;
   background-position: center center;
   border-radius: 3px;
+
   cursor: pointer;
   transition: 0.3s all;
 
@@ -38,7 +39,7 @@ const Info = styled(motion.div)`
   padding: 10px;
   background-color: ${(props) => props.theme.black.lighter};
   opacity: 0;
-  position: absolute;
+  position: relative;
   top: 100%;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;

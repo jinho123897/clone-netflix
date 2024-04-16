@@ -25,7 +25,7 @@ const ContentBox = styled(motion.div)`
   height: 90vh;
   background-color: ${(props) => props.theme.black.lighter};
   border-radius: 15px;
-  overflow: auto;
+  overflow: hidden;
 `;
 
 const Cover = styled.div<{ bgphoto: string }>`
@@ -126,8 +126,7 @@ function MovieInfo(props) {
       ? movie.id === Number(clickedHomeContentId?.params.movieId)
       : movie.id === Number(clickedMovieId)
   );
-  const closeOverlay = (event) => {
-    event.stopPropagation();
+  const closeOverlay = () => {
     history.push(search.split("&")[0]);
   };
 
@@ -137,7 +136,10 @@ function MovieInfo(props) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <ContentBox layoutId={clickedMovieInfo?.movieId}>
+      <ContentBox
+        layoutId={clickedMovieInfo?.movieId}
+        onClick={(e) => e.stopPropagation()}
+      >
         {clickedMovieInfo && (
           <>
             <Cover bgphoto={makeImagePath(clickedMovieInfo.backdrop_path)} />

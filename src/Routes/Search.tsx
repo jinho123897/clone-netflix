@@ -7,6 +7,7 @@ import styled from "styled-components";
 import MovieInfo from "./Components/MovieInfo.tsx";
 
 const Wrapper = styled.div`
+  width: 100%;
   margin-top: 50px;
   margin-bottom: 50px;
   padding: 50px;
@@ -29,7 +30,6 @@ const MovieWrapper = styled.div`
 function Search() {
   const { search } = useLocation();
   const keyword = new URLSearchParams(search).get("keyword");
-  // const keyword = search.split("=")[1].split("&")[0];
   const clickedContentsId = search.split("&mid=")[1];
   const { data, isLoading } = useQuery(["searchAllContents", keyword], () =>
     searchAllContents(keyword)

@@ -51,6 +51,8 @@ const Item = styled.li`
   display: flex;
   justify-content: center;
   flex-direction: column;
+  font-size: 16px;
+  font-weight: 500;
   &:hover {
     color: ${(props) => props.theme.white.lighter};
   }
@@ -130,6 +132,7 @@ function Header() {
       navAnimation.start("top");
     }
   });
+
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
@@ -184,7 +187,6 @@ function Header() {
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
             placeholder="Search for movie or tv show."
-            // onInput={() => console.log()}
           />
         </Search>
       </Col>
