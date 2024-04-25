@@ -96,6 +96,7 @@ const boxVariants = {
   },
   hover: {
     scale: 1.2,
+    zIndex: 1,
     y: -50,
     transition: {
       delay: 0.4,
@@ -116,7 +117,7 @@ const infoVariants = {
   },
 };
 
-function MovieBox({ movieInfo, type }) {
+function Card({ movieInfo, page, apiKeyword }) {
   const history = useHistory();
   const { search } = useLocation();
   const searchBoxClick = (movieId: number) => {
@@ -124,7 +125,13 @@ function MovieBox({ movieInfo, type }) {
   };
 
   const homeBoxClick = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
+    history.push(`/movies/${apiKeyword}/${movieId}`);
+  };
+
+  const onClickContent = (movieId: number) => {
+    page === "search"
+      ? history.replace(`${search.split("&")[0]}&mid=${movieId}`)
+      : history.push(`/${page}/${apiKeyword}/${movieId}`);
   };
 
   return (
@@ -134,12 +141,8 @@ function MovieBox({ movieInfo, type }) {
         whileHover="hover"
         initial="normal"
         bgphoto={makeImagePath(movieInfo.backdrop_path)}
-        layoutId={movieInfo.id + ""}
-        onClick={() =>
-          type === "home"
-            ? homeBoxClick(movieInfo.id)
-            : searchBoxClick(movieInfo.id)
-        }
+        layoutId={apiKeyword + "-" + String(movieInfo.id)}
+        onClick={() => onClickContent(movieInfo.id)}
       >
         <Info variants={infoVariants}>
           <BtnWrap>
@@ -160,4 +163,4 @@ function MovieBox({ movieInfo, type }) {
   );
 }
 
-export default MovieBox;
+export default Card;

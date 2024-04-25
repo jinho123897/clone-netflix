@@ -4,6 +4,6 @@ export function makeImagePath(id: string, format?: string) {
       format ? format : "original"
     }/${id}.jpg`;
   } else {
-    return "/no_image.png";
+    return process.env.PUBLIC_URL + "/noImage.png";
   }
 }

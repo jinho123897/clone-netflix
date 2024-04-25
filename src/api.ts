@@ -7,6 +7,7 @@ export interface IContent {
   poster_path: string;
   title: string;
   overview: string;
+  name: string;
 }
 
 export interface IGetMoviesResult {
@@ -17,15 +18,9 @@ export interface IGetMoviesResult {
   total_results: number;
 }
 
-export function getPopularMovies() {
+export function getContents(category: string, apiKeyword: string) {
   return fetch(
-    `${BASE_PATH}/movie/popular?api_key=${API_KEY}&language=en-US&page=1`
-  ).then((response) => response.json());
-}
-
-export function searchMovies(keyword) {
-  return fetch(
-    `${BASE_PATH}/search/movie?query=${keyword}&api_key=${API_KEY}`
+    `${BASE_PATH}/${category}/${apiKeyword}?api_key=${API_KEY}&language=en-US&page=1`
   ).then((response) => response.json());
 }
 
@@ -34,5 +29,3 @@ export function searchAllContents(keyword?: string | null) {
     `${BASE_PATH}/search/multi?query=${keyword}&language=en-US&api_key=${API_KEY}`
   ).then((response) => response.json());
 }
-
-// https://api.themoviedb.org/3/search/movie?query=dune&api_key=eb615a14961e87c02cb89c3fae3e6dbc&language=en-US&page=1

@@ -1,51 +1,46 @@
 import React from "react";
-import { useQuery } from "react-query";
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { IGetMoviesResult, getPopularMovies } from "../api.ts";
-import SliderWrap from "./Components/Slider.tsx";
+import Sliders from "./Components/Slider.tsx";
 import Banner from "./Components/Banner.tsx";
-import MovieInfo from "./Components/MovieInfo.tsx";
 
 const Wrapper = styled.div`
   background-color: black;
-  min-height: 200vh;
   overflow: hidden;
 `;
 
-const Loader = styled.div`
-  height: 20vh;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 function Home() {
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
-  const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getPopularMovies
-  );
-
+  const category = "movie";
   return (
     <Wrapper>
-      {isLoading ? (
-        <Loader>Loading...</Loader>
-      ) : (
-        <>
-          <Banner />
-          <SliderWrap />
-          <AnimatePresence>
-            {bigMovieMatch ? (
-              <MovieInfo moviesInfo={data?.results} type="home" />
-            ) : null}
-          </AnimatePresence>
-        </>
-      )}
+      <Banner category={category} apiKeyword="top_rated" />
+
+      <Sliders
+        category={category}
+        title="Now Playing Movies"
+        apiKeyword="now_playing"
+      />
+
+      <Sliders
+        category={category}
+        title="Top Rated Movies"
+        apiKeyword="top_rated"
+      />
+
+      <Sliders
+        category={category}
+        title="Popular Movies"
+        apiKeyword="popular"
+      />
+
+      <Sliders
+        category={category}
+        title="Upcoming Movies"
+        apiKeyword="upcoming"
+      />
     </Wrapper>
   );
+
+  // return <Wrapper>{pageType?.params === "movie" ? "movie" : "tv"}</Wrapper>;
 }
 
 export default Home;

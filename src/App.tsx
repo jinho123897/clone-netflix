@@ -4,6 +4,7 @@ import Home from "./Routes/Home.tsx";
 import Search from "./Routes/Search.tsx";
 import Tv from "./Routes/Tv.tsx";
 import Header from "./Routes/Components/Header.tsx";
+import Footer from "./Routes/Components/Footer.tsx";
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
         <Route path="/search">
           <Search />
         </Route>
-        <Route path={["/", "/movies/:movieId"]}>
+        <Route path={["/", "/movie/:find/:movieId"]}>
           <Home />
         </Route>
       </Switch>
+      <Footer />
     </Router>
   );
 }

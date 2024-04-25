@@ -3,8 +3,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import styled from "styled-components";
 import useWindowDimensions from "../../useWindowDimensions.tsx";
 import { useQuery } from "react-query";
-import { IGetMoviesResult, getPopularMovies } from "../../api.ts";
-import MovieBox from "./MovieBox.tsx";
+import { IGetMoviesResult, getContents } from "../../api.ts";
+import Card from "./Card.tsx";
+import { useRouteMatch } from "react-router-dom";
+import Modal from "./Modal.tsx";
+import Loader from "./Loader.tsx";
 
 const Wrapper = styled.div`
   position: relative;
@@ -20,6 +23,7 @@ const Title = styled.h2`
 const Slider = styled.div`
   position: relative;
   height: 10vw;
+  margin-bottom: 50px;
 
   & > button {
     display: block;
@@ -72,11 +76,15 @@ const sliderVariants = {
   }),
 };
 
-function SliderWrap() {
+function Sliders({ category, title, apiKeyword }) {
+  const bigMovieMatch = useRouteMatch<{ find: string; contentId: string }>(
+    `/${category}/:find/:contentId`
+  );
+
   const windowWidth = useWindowDimensions();
   const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getPopularMovies
+    [category, apiKeyword],
+    () => getContents(category, apiKeyword)
   );
   const offset = 5;
   const [sliderIdx, setSliderIdx] = useState(0);
@@ -87,7 +95,7 @@ function SliderWrap() {
       if (leaving) return;
       toggleLeaving();
       setIsBack(false);
-      const totalMovies = data.results.length - 1;
+      const totalMovies = data.results.length;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setSliderIdx((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
@@ -97,7 +105,7 @@ function SliderWrap() {
       if (leaving) return;
       toggleLeaving();
       setIsBack(true);
-      const totalMovies = data.results.length - 1;
+      const totalMovies = data.results.length;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setSliderIdx((prev) => (prev === 0 ? maxIndex : prev - 1));
     }
@@ -107,7 +115,7 @@ function SliderWrap() {
 
   return (
     <Wrapper>
-      <Title>Popular movies</Title>
+      <Title>{title}</Title>
       <Slider>
         <AnimatePresence
           initial={false}
@@ -123,19 +131,33 @@ function SliderWrap() {
             transition={{ type: "tween", duration: 0.5 }}
             key={sliderIdx}
           >
-            {data?.results
-              .slice(1)
-              .slice(offset * sliderIdx, offset * sliderIdx + offset)
-              .map((movie) => (
-                <MovieBox movieInfo={movie} type="home" key={movie.id} />
-              ))}
+            {isLoading ? (
+              <Loader />
+            ) : (
+              data?.results
+                .slice(offset * sliderIdx, offset * sliderIdx + offset)
+                .map((movie) => (
+                  <Card
+                    movieInfo={movie}
+                    page={category}
+                    key={movie.id}
+                    apiKeyword={apiKeyword}
+                  />
+                ))
+            )}
           </Row>
         </AnimatePresence>
         <PrevBtn onClick={decreaseIndex}>&lt;</PrevBtn>
         <NextBtn onClick={increaseIndex}>&gt;</NextBtn>
       </Slider>
+
+      <AnimatePresence>
+        {bigMovieMatch?.params.find === apiKeyword ? (
+          <Modal moviesInfo={data?.results} page={category} />
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }
 
-export default SliderWrap;
+export default Sliders;

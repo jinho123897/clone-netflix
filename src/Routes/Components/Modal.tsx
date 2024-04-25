@@ -9,6 +9,7 @@ import { makeImagePath } from "../../utilis.ts";
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
@@ -113,23 +114,30 @@ const PlayBtn = styled.button``;
 const PlusBtn = styled.button``;
 const GoodBtn = styled.button``;
 
-function MovieInfo(props) {
+interface IParams {
+  find: string;
+  movieId: string;
+}
+
+function Modal({ moviesInfo, page }) {
   const history = useHistory();
   const { search } = useLocation();
   const clickedMovieId = search.split("&mid=")[1];
-  const clickedHomeContentId = useRouteMatch<{ movieId: string }>(
-    "/movies/:movieId"
+  const clickedHomeContentType = useRouteMatch<IParams>(
+    `/${page}/:find/:movieId`
   );
 
-  const clickedMovieInfo = props.moviesInfo.find((movie) =>
-    props.type === "home"
-      ? movie.id === Number(clickedHomeContentId?.params.movieId)
-      : movie.id === Number(clickedMovieId)
+  const clickedMovieInfo = moviesInfo.find((movie) =>
+    page === "search"
+      ? movie.id === Number(clickedMovieId)
+      : movie.id === Number(clickedHomeContentType?.params.movieId)
   );
+
   const closeOverlay = () => {
-    history.push(search.split("&")[0]);
+    page === "search"
+      ? history.replace(`/search${search.split("&mid=")[0]}`)
+      : history.goBack();
   };
-
   return (
     <Overlay
       onClick={closeOverlay}
@@ -157,8 +165,17 @@ function MovieInfo(props) {
                   <FaRegThumbsUp />
                 </GoodBtn>
               </BtnWrap>
-              <p>Release date : {clickedMovieInfo.release_date || "None"} </p>
-              <p>Vote average : {clickedMovieInfo.vote_average || "None"}</p>
+              {clickedMovieInfo.release_date ? (
+                <p>Release date : {clickedMovieInfo.release_date}</p>
+              ) : (
+                <p>First Air Date : {clickedMovieInfo.first_air_date}</p>
+              )}
+              <p>
+                Vote average :{" "}
+                {"⭐️" +
+                  Math.floor(clickedMovieInfo.vote_average * 100) / 100 ||
+                  "None"}
+              </p>
               <p>Vote count : {clickedMovieInfo.vote_count || "None"}</p>
               <Overview>{clickedMovieInfo.overview}</Overview>
             </Info>
@@ -172,4 +189,4 @@ function MovieInfo(props) {
   );
 }
 
-export default MovieInfo;
+export default Modal;

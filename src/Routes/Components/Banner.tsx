@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { FaPlay } from "react-icons/fa";
 import { CiCircleInfo } from "react-icons/ci";
 import { makeImagePath } from "../../utilis.ts";
-import { IGetMoviesResult, getPopularMovies } from "../../api.ts";
+import { IGetMoviesResult, getContents } from "../../api.ts";
 import { useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import Modal from "./Modal.tsx";
 
 const BannerWrap = styled.div<{ bgphoto: string }>`
   height: 80vh;
@@ -66,20 +67,23 @@ const Overview = styled.p`
   word-break: keep-all;
 `;
 
-function Banner() {
+function Banner({ category, apiKeyword }) {
+  const bigMovieMatch = useRouteMatch<{ find: string; contentId: string }>(
+    `/${category}/:find/:contentId`
+  );
   const history = useHistory();
   const { data } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getPopularMovies
+    [category + "banner", apiKeyword],
+    () => getContents(category, apiKeyword)
   );
 
   const overlayInfo = (movieId) => {
-    history.push(`/movies/${movieId}`);
+    history.push(`/${category}/banner/${movieId}`);
   };
 
   return (
     <BannerWrap bgphoto={makeImagePath(data?.results[0].backdrop_path || "")}>
-      <Title>{data?.results[0].title}</Title>
+      <Title>{data?.results[0].title ?? data?.results[0].name}</Title>
       <Overview>{data?.results[0].overview}</Overview>
       <BtnWrap>
         <PlayBtn>
@@ -91,6 +95,10 @@ function Banner() {
           Infomation
         </InfoBtn>
       </BtnWrap>
+
+      {bigMovieMatch?.params.find === "banner" ? (
+        <Modal moviesInfo={data?.results} page={category} />
+      ) : null}
     </BannerWrap>
   );
 }

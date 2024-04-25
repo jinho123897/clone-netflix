@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -107,23 +107,11 @@ interface IForm {
 
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const homeMatch = useRouteMatch(["/movies/:movieId", "/"]);
+  const homeMatch = useRouteMatch(["/movie/:movieId", "/"]);
   const tvMatch = useRouteMatch("/tv");
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const { scrollY } = useScroll();
-  const toggleSearch = () => {
-    if (searchOpen) {
-      inputAnimation.start({
-        scaleX: 0,
-      });
-    } else {
-      inputAnimation.start({
-        scaleX: 1,
-      });
-    }
-    setSearchOpen((prev) => !prev);
-  };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 40) {
@@ -134,9 +122,23 @@ function Header() {
   });
 
   const history = useHistory();
-  const { register, handleSubmit } = useForm<IForm>();
+  const { register, handleSubmit, setFocus } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    history.push(`/search?keyword=${data.keyword}`);
+    history.replace(`/search?keyword=${data.keyword}`);
+  };
+
+  const toggleSearch = () => {
+    if (searchOpen) {
+      inputAnimation.start({
+        scaleX: 0,
+      });
+    } else {
+      inputAnimation.start({
+        scaleX: 1,
+      });
+      setFocus("keyword");
+    }
+    setSearchOpen((prev) => !prev);
   };
 
   return (
@@ -155,7 +157,7 @@ function Header() {
         <Items>
           <Item>
             <Link to="/">
-              Home {homeMatch?.isExact && <Circle layoutId="circle" />}
+              Movies {homeMatch?.isExact && <Circle layoutId="circle" />}
             </Link>
           </Item>
           <Item>
